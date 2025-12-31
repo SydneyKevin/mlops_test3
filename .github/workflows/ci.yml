@@ -22,4 +22,6 @@ jobs:
           pip install pytest databricks-dlt "databricks-connect>=15.4,<15.5"
 
       - name: Run tests
+        env:
+          SKIP_DATABRICKS_TESTS: "1"
         run: pytest -q

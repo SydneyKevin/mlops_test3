@@ -22,6 +22,17 @@ except ImportError:
     )
 
 
+def _should_skip_databricks_tests() -> bool:
+    """Detect whether Databricks-dependent tests should be skipped."""
+    if os.environ.get("SKIP_DATABRICKS_TESTS") == "1":
+        return True
+    try:
+        WorkspaceClient()
+        return False
+    except Exception:
+        return True
+
+
 @pytest.fixture()
 def spark() -> SparkSession:
     """Provide a SparkSession fixture for tests.
@@ -86,6 +97,9 @@ def _allow_stderr_output(config: pytest.Config):
 
 def pytest_configure(config: pytest.Config):
     """Configure pytest session."""
+    if _should_skip_databricks_tests():
+        pytest.skip("Databricks auth not configured; skipping Spark integration tests", allow_module_level=True)
+
     with _allow_stderr_output(config):
         _enable_fallback_compute()
 
