@@ -1,8 +1,3 @@
-import pytest
-
-# Skip this test when not running inside a Databricks runtime (e.g., local GitHub Actions runner).
-pytest.importorskip("databricks.sdk.runtime", reason="Requires Databricks runtime")
-
 import os
 import importlib
 import pytest
