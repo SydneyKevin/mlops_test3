@@ -97,8 +97,11 @@ def _allow_stderr_output(config: pytest.Config):
 
 def pytest_configure(config: pytest.Config):
     """Configure pytest session."""
+    # If Databricks auth is missing, skip Databricks setup so non-DB tests can still run.
     if _should_skip_databricks_tests():
-        pytest.skip("Databricks auth not configured; skipping Spark integration tests", allow_module_level=True)
+        # Optionally register a marker for clarity; tests can check this marker if needed.
+        config.addinivalue_line("markers", "databricks: requires Databricks authentication")
+        return
 
     with _allow_stderr_output(config):
         _enable_fallback_compute()
