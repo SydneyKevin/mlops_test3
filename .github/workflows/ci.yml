@@ -25,3 +25,10 @@ jobs:
         env:
           SKIP_DATABRICKS_TESTS: "1"
         run: pytest -q
+
+  pr-greeting:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Say hello
+        run: echo "Pull request CI ran for ${{ github.repository }} on ref ${{ github.ref }}"
